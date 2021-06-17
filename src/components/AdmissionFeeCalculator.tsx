@@ -72,54 +72,83 @@ class Summary extends Component {
     )
   }
 }
-export default class AdmissionFeeCalculator extends Component {
-  private details: DetailProps[] = [
-    {
-      classification: {
-        name: 'adults',
-        description: '',
-        unitPrice: 1000,
-        numOfPeople: 0,
-        totalPrice: 0,
-      },
-    },
-    {
-      classification: {
-        name: 'students',
-        description: 'high school students',
-        unitPrice: 700,
-        numOfPeople: 0,
-        totalPrice: 0,
-      },
-    },
-    {
-      classification: {
-        name: 'children',
-        description: 'elementary school students',
-        unitPrice: 300,
-        numOfPeople: 0,
-        totalPrice: 0,
-      },
-    },
-    {
-      classification: {
-        name: 'baby',
-        description: 'bub bub!',
-        unitPrice: 0,
-        numOfPeople: 0,
-        totalPrice: 0,
-      },
-    },
-  ]
+
+type AdmissionFeeCalculatorState = {
+  feeClassifications: FeeClassification[]
+}
+
+export default class AdmissionFeeCalculator extends Component<
+  {},
+  AdmissionFeeCalculatorState
+> {
+  constructor(props: {}) {
+    super(props)
+    const adults: FeeClassification = {
+      name: 'adults',
+      description: '',
+      unitPrice: 1000,
+      numOfPeople: 0,
+      totalPrice: 0,
+    }
+    const students: FeeClassification = {
+      name: 'students',
+      description: 'high school students',
+      unitPrice: 700,
+      numOfPeople: 0,
+      totalPrice: 0,
+    }
+    const children: FeeClassification = {
+      name: 'children',
+      description: 'elementary school students',
+      unitPrice: 300,
+      numOfPeople: 0,
+      totalPrice: 0,
+    }
+    const infants: FeeClassification = {
+      name: 'baby',
+      description: 'bub bub!',
+      unitPrice: 0,
+      numOfPeople: 0,
+      totalPrice: 0,
+    }
+    this.state = {
+      feeClassifications: [adults, students, children, infants],
+    }
+  }
+
+  handleNumOfPeopleChange(idx: number, num: number) {
+    const currentFC = this.state.feeClassifications[idx]
+    const newTotalPrice = currentFC.unitPrice * num
+    const newFC: FeeClassification = Object.assign({}, currentFC, {
+      numOfPeople: num,
+      totalPrice: newTotalPrice,
+    })
+    const feeClassifications = this.state.feeClassifications.slice()
+    feeClassifications[idx] = newFC
+    this.setState({ feeClassifications })
+  }
 
   render() {
-    const detailsJsx = this.details.map((fc, idx) => {
-      return <Detail key={idx.toString()} classification={fc.classification} />
+    const details = this.state.feeClassifications.map((fc, idx) => {
+      return (
+        <Detail
+          key={idx.toString()}
+          classification={fc}
+          onNumOfPeopleChange={(n) => this.handleNumOfPeopleChange(idx, n)}
+        />
+      )
     })
+    const numOfPeople = this.state.feeClassifications
+      .map((fc) => fc.numOfPeople)
+      .reduce((p, c) => p + c)
+    const totalAmount = this.state.feeClassifications
+      .map((fc) => fc.totalPrice)
+      .reduce((p, c) => p + c)
+
     return (
       <>
-        {detailsJsx}
-        <Summary />
+        {details}
+        <Summary numOfPeople={numOfPeople} totalAmount={totalAmount} />
       </>
     )
   }
