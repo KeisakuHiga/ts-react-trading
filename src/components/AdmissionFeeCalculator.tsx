@@ -9,12 +9,10 @@ type FeeClassification = {
 }
 type DetailProps = {
   classification: FeeClassification
-}
-type DetailState = {
-  numOfPeople: number
+  onNumOfPeopleChange: (num: number) => void
 }
 
-class Detail extends Component<DetailProps, DetailState> {
+class Detail extends Component<DetailProps, {}> {
   constructor(props: DetailProps) {
     super(props)
     this.state = {
@@ -23,7 +21,7 @@ class Detail extends Component<DetailProps, DetailState> {
   }
   onNumOfPeopleChange(e: ChangeEvent<HTMLSelectElement>): void {
     const num: number = Number(e.target.value)
-    this.setState({ numOfPeople: num })
+    this.props.onNumOfPeopleChange(num)
   }
   render() {
     return (
@@ -39,7 +37,7 @@ class Detail extends Component<DetailProps, DetailState> {
         </div>
         <div className="num-people">
           <select
-            value={this.state.numOfPeople}
+            value={this.props.classification.numOfPeople}
             onChange={(e) => this.onNumOfPeopleChange(e)}
           >
             <option value="0">0</option>
@@ -55,17 +53,26 @@ class Detail extends Component<DetailProps, DetailState> {
   }
 }
 
-class Summary extends Component {
+type SummaryProps = {
+  numOfPeople: number
+  totalAmount: number
+}
+
+class Summary extends Component<SummaryProps, {}> {
   render() {
     return (
       <div>
         <div className="party">
-          <input type="text" className="party" value="0" />
+          <input type="text" className="party" value={this.props.numOfPeople} />
           <span>名様</span>
         </div>
         <div className="total-amount">
           <span>合計</span>
-          <input type="text" className="total-amount" value="0" />
+          <input
+            type="text"
+            className="total-amount"
+            value={this.props.totalAmount}
+          />
           <span>円</span>
         </div>
       </div>
@@ -134,7 +141,7 @@ export default class AdmissionFeeCalculator extends Component<
         <Detail
           key={idx.toString()}
           classification={fc}
-          onNumOfPeopleChange={(n) => this.handleNumOfPeopleChange(idx, n)}
+          onNumOfPeopleChange={(num) => this.handleNumOfPeopleChange(idx, num)}
         />
       )
     })
