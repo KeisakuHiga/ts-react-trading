@@ -1,10 +1,10 @@
-import AdmissionFeeCalculator from './components/AdmissionFeeCalculator'
+import Tutorial from './components/Tutorial'
 import './App.css'
 
 function App() {
   return (
     <div>
-      <AdmissionFeeCalculator />
+      <Tutorial />
     </div>
   )
 }
