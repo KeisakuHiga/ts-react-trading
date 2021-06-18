@@ -1,4 +1,5 @@
 import { ChangeEvent, Component, FC } from 'react'
+import TutoHooks from './TutoHooks'
 
 type FeeClassification = {
   name: string
@@ -136,6 +137,7 @@ export default class AdmissionFeeCalculator extends Component<
       <>
         {details}
         <Summary numOfPeople={numOfPeople} totalAmount={totalAmount} />
+        <TutoHooks />
       </>
     )
   }
