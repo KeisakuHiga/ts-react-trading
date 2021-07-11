@@ -3,12 +3,29 @@ import { Component } from 'react'
 import axios from 'axios'
 import './App.css'
 
-class App extends Component {
+interface ICandle {
+  time: Date
+  open: number
+  close: number
+  high: number
+  low: number
+  volume: number
+}
+
+type MyState = { candles: ICandle[] }
+
+class App extends Component<{}, MyState> {
+  constructor(props: any) {
+    super(props)
+    this.state = {
+      candles: [],
+    }
+  }
   async componentDidMount() {
-    const URL = 'http://localhost:3000/api'
+    const URL = 'http://localhost:3000/api/candles'
     try {
-      const candles = await axios(URL)
-      console.log(candles)
+      const { data } = await axios(URL)
+      const candles = data.candles
       this.setState({ candles })
     } catch (err) {
       console.log(err)
@@ -17,13 +34,14 @@ class App extends Component {
   render() {
     return (
       <div>
+        {/* <div>{ this.state.candles }</div> */}
         <Chart
           width={'100%'}
           height={350}
           chartType="CandlestickChart"
           loader={<div>Loading Chart</div>}
           data={[
-            ['day', 'a', 'b', 'c', 'd'],
+            ['date', 'a', 'b', 'c', 'd'],
             ['Mon', 20, 28, 38, 45],
             ['Tue', 31, 38, 55, 66],
             ['Wed', 50, 55, 77, 80],
