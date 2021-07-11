@@ -32,22 +32,26 @@ class App extends Component<{}, MyState> {
     }
   }
   render() {
+    let candleData: Array<Array<string | number | Date>> = [
+      ['date', 'low', 'open', 'close', 'high'],
+    ]
+    this.state.candles.forEach((candle) => {
+      const arr = []
+      arr.push(candle.time)
+      arr.push(+candle.low)
+      arr.push(+candle.open)
+      arr.push(+candle.close)
+      arr.push(+candle.high)
+      candleData.push(arr)
+    })
     return (
       <div>
-        {/* <div>{ this.state.candles }</div> */}
         <Chart
           width={'100%'}
           height={350}
           chartType="CandlestickChart"
           loader={<div>Loading Chart</div>}
-          data={[
-            ['date', 'a', 'b', 'c', 'd'],
-            ['Mon', 20, 28, 38, 45],
-            ['Tue', 31, 38, 55, 66],
-            ['Wed', 50, 55, 77, 80],
-            ['Thu', 77, 77, 66, 50],
-            ['Fri', 68, 66, 22, 15],
-          ]}
+          data={candleData}
           options={{
             legend: 'none',
           }}
