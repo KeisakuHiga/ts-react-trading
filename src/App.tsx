@@ -1,7 +1,6 @@
 import { Chart } from 'react-google-charts'
 import { Component } from 'react'
 import axios from 'axios'
-import './App.css'
 
 interface ICandle {
   time: Date
@@ -22,9 +21,10 @@ class App extends Component<{}, MyState> {
     }
   }
   async componentDidMount() {
-    const URL = 'http://localhost:3000/api/candles'
     try {
-      const { data } = await axios(URL)
+      const { data } = await axios(
+        `${process.env.REACT_APP_BASE_URL}/api/candles`,
+      )
       const candles = data.candles
       this.setState({ candles })
     } catch (err) {
@@ -57,6 +57,7 @@ class App extends Component<{}, MyState> {
           }}
           rootProps={{ 'data-testid': '1' }}
         />
+        {process.env.NODE_ENV}
       </div>
     )
   }
